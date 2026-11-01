@@ -199,7 +199,3 @@ If there is an rating related to that email, the score is updated, if not a new 
 ![alt](./media/demo2.gif)
 
 ---
-
-<p align="center" style="font-weight:bolder">
-    Developed with 💛 by <a href="https://github.com/lucasferreiraz">Lucas Ferreira</a>
-</p>
