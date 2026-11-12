@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build
+target/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
