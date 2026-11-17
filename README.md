@@ -32,6 +32,26 @@ The **DSMovie** project was developed through the **8th Edition of DevSuperior's
 
 Auxiliary dependencies can be found at: [dependencies](https://github.com/lucasferreiraz/dsmovie/network/dependencies).
 
+## Backend
+
+Para executar localmente sem configurar um banco, use o perfil `dev`, que utiliza o H2:
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+Para executar com o Neon, configure estas variáveis no ambiente de execução:
+
+```text
+SPRING_PROFILES_ACTIVE=prod
+SPRING_DATASOURCE_URL=jdbc:postgresql://<host-neon>/<database>?sslmode=require
+SPRING_DATASOURCE_USERNAME=<usuario-neon>
+SPRING_DATASOURCE_PASSWORD=<senha-neon>
+```
+
+O valor de `SPRING_DATASOURCE_URL` deve começar com `jdbc:postgresql://`. A variável `DATABASE_URL` no formato `postgresql://` fornecido pelo Neon não deve ser usada diretamente pelo Spring Boot.
+
 
 ## Layout 🔖
 
