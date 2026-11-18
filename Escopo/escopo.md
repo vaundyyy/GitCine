@@ -51,8 +51,8 @@ Mas ainda precisa de refinamento em:
 ## 4. Stack e Decisões Arquiteturais
 
 ### 4.1. Backend
-- Java 17
-- Spring Boot 3.x
+- Java 25
+- Spring Boot 3.x compatible com Java 25
 - Spring Web
 - Spring Data JPA
 - Spring Security
@@ -60,6 +60,8 @@ Mas ainda precisa de refinamento em:
 - Validation
 - PostgreSQL
 - Neon como provedor de banco em nuvem
+- BCrypt / PasswordEncoder para hash de senhas
+- GlobalExceptionHandler + exceptions específicas para padronização de erros
 
 ### 4.2. Frontend
 - React
@@ -83,6 +85,7 @@ Mas ainda precisa de refinamento em:
 - ArchUnit
 - JaCoCo
 - GitHub Actions ou pipeline equivalente
+- Testcontainers opcional para ambiente de integração com banco
 
 ---
 
@@ -104,6 +107,7 @@ A arquitetura será estruturada em camadas com foco em reorganização lógica, 
     - commands / queries
     - DTOs de entrada
     - mappers
+    - validators
 
 - `infrastructure`
     - persistence adapters
@@ -111,6 +115,7 @@ A arquitetura será estruturada em camadas com foco em reorganização lógica, 
     - security adapters
     - controllers
     - external clients
+    - exception handlers
 
 - `web`
     - controllers REST
@@ -121,6 +126,8 @@ A arquitetura será estruturada em camadas com foco em reorganização lógica, 
 - o domínio não deve conhecer Spring, banco, JWT, React ou HTTP
 - os adapters são os responsáveis por comunicar o domínio com o mundo externo
 - cada caso de uso deve ter uma responsabilidade bem definida
+- regras de negócio e validação devem ficar no domínio/aplicação e não no controller
+- erros da API devem ser centralizados em um handler global
 
 ---
 
@@ -136,6 +143,7 @@ Mapear o estado atual do projeto e identificar cada responsabilidade atual de ba
 - mapeamento de endpoints atualizados
 - documentação das regras de negócio
 - definição da estrutura de pacotes
+- definição do contrato de autenticação e avaliação com `userId`
 
 ### Validações
 - verificar se todas as entidades possuem papel claro dentro do domínio
@@ -147,6 +155,7 @@ Mapear o estado atual do projeto e identificar cada responsabilidade atual de ba
 - não iniciar refatoração sem mapear os fluxos principais
 - toda regra importante deve ser documentada antes da implementação
 - qualquer regra de negócio deve ser tratada no domínio ou aplicação
+- usar `userId` como identidade do usuário avaliado no backend
 
 ### Resultado esperado
 - base de conhecimento clara para a refatoração
@@ -164,6 +173,7 @@ Separar o núcleo da aplicação em regras de domínio, antes de criar qualquer 
 - regras de negócio
 - exceções de domínio
 - contratos para casos de uso
+- validadores de domínio
 
 ### Regra de negócio central
 - um usuário autenticado pode avaliar um filme uma única vez
@@ -171,6 +181,7 @@ Separar o núcleo da aplicação em regras de domínio, antes de criar qualquer 
 - a média do filme deve ser recalculada após cada atualização
 - a nota deve estar dentro de um limite válido
 - a avaliação deve estar vinculada ao usuário e ao filme
+- a identificação do usuário deve ser feita pelo `userId` autenticado ou informado de forma segura pelo token
 
 ### Validações
 - validar email corretamente
@@ -197,12 +208,14 @@ Reorganizar o backend em camadas com separação de domínio, casos de uso e inf
 - use cases
 - serviços de domínio ou aplicação
 - gerenciamento de erros
+- camada de security adapter com JWT
 
 ### Validações
 - confirmar que controllers não executam lógica de negócio
 - confirmar que o domínio não depende de framework
 - garantir que o repository seja usado apenas através de adapters
 - verificar que todos os casos de uso são executados por interfaces de port
+- verificar que o `GlobalExceptionHandler` padroniza todas as respostas
 
 ### Resultado esperado
 - código mais testável
@@ -223,6 +236,7 @@ Garantir que apenas usuários autenticados possam avaliar filmes.
 - filtro de autenticação
 - autorização por roles
 - endpoint protegido para avaliação
+- extrator do `userId` a partir do token autenticado
 
 ### Regras
 - rotas públicas:
@@ -234,6 +248,7 @@ Garantir que apenas usuários autenticados possam avaliar filmes.
     - avaliação de filme
     - atualização de avaliação
     - endpoints do usuário
+- `userId` deve ser validado com base no token do usuário autenticado
 
 ### Validações
 - token inválido deve ser rejeitado
@@ -241,6 +256,7 @@ Garantir que apenas usuários autenticados possam avaliar filmes.
 - token expirado deve gerar resposta clara
 - roles devem ser respeitadas
 - senha deve ser armazenada com hash
+- `userId` autenticado deve corresponder ao usuário que realiza a ação
 
 ### Resultado esperado
 - autenticação real
@@ -260,6 +276,7 @@ Definir a estrutura de banco compatível com o domínio e pronto para uso em nuv
 - constraints
 - relacionamento entre usuários, filmes e avaliações
 - indexação básica
+- unique constraint em `(user_id, movie_id)` para avaliação
 
 ### Estrutura sugerida
 - `tb_user`
@@ -293,6 +310,7 @@ Definir a estrutura de banco compatível com o domínio e pronto para uso em nuv
 - cada avaliação deve pertencer a um usuário existente
 - score deve representar a média do filme
 - count deve refletir a quantidade total de avaliações válidas
+- a operação de avaliação deve seguir a regra do `userId` e evitar duplicidade
 
 ### Validações
 - verificar unicidade composta `user_id + movie_id`
@@ -318,6 +336,7 @@ Centralizar a lógica de avaliação e atualização da nota.
 - a operação precisa recalcular score e count do filme
 - a nota deve obedecer ao intervalo definido
 - a atualização deve manter coesão do histórico
+- a validação da identidade do usuário deve ser tratada pelo token/JWT
 
 ### Validações
 - usuário autenticado
@@ -325,6 +344,7 @@ Centralizar a lógica de avaliação e atualização da nota.
 - avaliação presente
 - valor válido
 - não duplicar registros
+- `userId` do token consistente com a avaliação
 
 ### Resultado esperado
 - consistência nas notas
@@ -352,6 +372,7 @@ Aprimorar a interface com componentes reutilizáveis e UX mais madura.
 - feedback visual deve existir para erros e sucesso
 - paginação deve funcionar corretamente
 - o componente de avaliação deve representar melhor a experiência do usuário
+- o frontend deve enviar `userId` de forma segura através do contexto autenticado
 
 ### Resultado esperado
 - interface mais elegante
@@ -372,12 +393,14 @@ Garantir que o sistema foi refatorado sem quebrar regras de negócio.
 - testes de casos de uso
 - testes BDD para fluxos principais
 - testes de arquitetura
+- testes de validação de exceções globais
 
 ### Validações
 - verificar uso correto de dependências
 - garantir que os casos de uso são testados
 - validar autenticação e autorização
 - verificar integrações com banco e endpoints
+- verificar respostas de erro consistentes via `@ControllerAdvice`
 
 ### Resultado esperado
 - redução de regressão
@@ -399,6 +422,8 @@ Garantir que o sistema foi refatorado sem quebrar regras de negócio.
 - validar dados antes de persistir
 - evitar lógica duplicada
 - sempre documentar regras que afetem o usuário ou sistema
+- usar `@ControllerAdvice` para tratar erros globais e padronizar respostas
+- preferir `userId` como referência no fluxo de avaliação autenticado
 
 ---
 
@@ -414,6 +439,8 @@ O projeto será considerado concluído quando:
 - o frontend estiver organizado em componentes reutilizáveis
 - os testes automatizados forem executados com sucesso
 - a aplicação estiver pronta para evoluir com novas funcionalidades
+- o `GlobalExceptionHandler` padronizar todas as respostas de erro
+- o `userId` estiver validado e protegido pelo token
 
 ---
 
@@ -456,12 +483,14 @@ Como usuário autenticado, eu quero logar na aplicação para ter acesso às fun
 - filtro de autenticação
 - autenticação por email e senha
 - validação do token em cada requisição
+- uso de `userId` autenticado a partir do token
 
 #### Critérios de aceite
 - usuário inválido recebe erro 401
 - usuário com token válido consegue acessar endpoint protegido
 - token expirado é recusado
 - senha é armazenada com hash
+- `userId` do token é usado para autorização de ações sensíveis
 
 #### Resultado esperado
 - autenticação funcional e segura
@@ -479,17 +508,19 @@ Como usuário autenticado, eu quero logar na aplicação para ter acesso às fun
 Como usuário autenticado, eu quero avaliar um filme para expressar minha nota.
 
 #### Requisitos
-- receber `movieId`, `userId` e nota
+- receber `movieId`, `userId` e `value` no payload da avaliação
 - validar dados de entrada
 - garantir usuário autenticado
 - garantir nota válida
 - persistir avaliação
+- bloquear duplicidade para o mesmo usuário e filme
 
 #### Critérios de aceite
 - nota fora do intervalo não é aceita
 - filme inexistente retorna erro
 - usuário não autenticado não consegue avaliar
 - avaliação cria ou atualiza registro corretamente
+- `userId` do payload e token devem ser consistentes
 
 #### Resultado esperado
 - fluxo de avaliação seguro e funcional
@@ -515,6 +546,7 @@ Como usuário autenticado, eu quero avaliar um filme apenas uma vez para evitar 
 - não é possível criar múltiplos registros para o mesmo usuário e filme
 - o sistema atualiza a avaliação existente
 - a média do filme é recalculada
+- o sistema rejeita operações inconsistentes com `userId`\
 
 #### Resultado esperado
 - regra de negócio correta e consistente
@@ -534,12 +566,14 @@ Como cliente da API, eu quero receber respostas consistentes para saber o que oc
 - criar exceptions específicas
 - definir códigos HTTP padronizados
 - retornar mensagem útil
-- centralizar o tratamento de erros
+- centralizar o tratamento de erros em um `@ControllerAdvice`
+- padronizar payload de erro da API
 
 #### Critérios de aceite
 - filme não encontrado retorna 404
 - usuário não autenticado retorna 401
 - dado inválido retorna 400
+- regra de negócio conflitante retorna 409 ou 422
 - erro interno não expõe detalhes sensíveis
 
 #### Resultado esperado
@@ -749,6 +783,7 @@ Como sistema, eu quero recalcular a nota média e a quantidade de avaliações p
 - garantir que o frontend não acessa dados protegidos sem token
 - garantir que o banco no Neon está configurado e funcional
 - garantir que os testes executam com sucesso em pipeline
+- garantir que erros da API são tratatos por `GlobalExceptionHandler`
 
 ### Checklist final
 - [ ] Arquitetura hexagonal aplicada
@@ -761,6 +796,8 @@ Como sistema, eu quero recalcular a nota média e a quantidade de avaliações p
 - [ ] Testes automatizados criados
 - [ ] CI/CD funcionando
 - [ ] Documentação da API atualizada
+- [ ] GlobalExceptionHandler padronizando respostas
+- [ ] userId validado via token
 
 ---
 
@@ -793,5 +830,6 @@ A autenticação via JWT também é uma decisão correta, pois:
 - o sistema precisa de usuário validado para avaliar
 - as ações de avaliação exigem autorização
 - o backend precisa de segurança real e não apenas uma camada permissiva
+- o `userId` autenticado permite validar de forma segura ações e permissões
 
 Em conjunto, a arquitetura hexagonal + PostgreSQL + JWT + frontend componentizado produz uma base sólida para evoluir de um MVP para um projeto com boa qualidade de engenharia e potencial de produção.

@@ -1,3 +1,4 @@
+
 <h1 align="center"><b> DSMovie</b></h1>
 
 <div align="center">
@@ -193,29 +194,3 @@ If there is an rating related to that email, the score is updated, if not a new 
 **URL** : `localhost/sales/{id}/notification`
 
 **Code** : `200 OK`
-
-**Content example:**
-
-```json
-{
-    "movieId": 1,
-    "email": "lucas@gmail.com",
-    "score": 3
-}
-```
-
-</details>
-
----
-
-## Demonstration 🖥️
-
-**Returns a paged list of all movies saved in the database.**
-
-![alt](./media/demo1.gif)
-
-**Adding a review for a specific movie.**
-
-![alt](./media/demo2.gif)
-
----

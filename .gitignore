@@ -34,3 +34,19 @@ build/
 .env.local
 .neon
 node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build
+target/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
