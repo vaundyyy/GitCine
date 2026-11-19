@@ -25,11 +25,15 @@ class DsmovieApplicationTests {
 	void shouldLoadUserAndAdminRoles() {
 		User maria = userRepository.findByEmail("maria@gmail.com");
 		User joao = userRepository.findByEmail("joao@gmail.com");
+		User rafael = userRepository.findByEmail("rafaeldaloco2@gmail.com");
 
 		assertThat(maria.getRoles())
 			.extracting(role -> role.getAuthority())
 			.containsExactlyInAnyOrder("ROLE_USER", "ROLE_ADMIN");
 		assertThat(joao.getRoles())
+			.extracting(role -> role.getAuthority())
+			.containsExactly("ROLE_USER");
+		assertThat(rafael.getRoles())
 			.extracting(role -> role.getAuthority())
 			.containsExactly("ROLE_USER");
 	}
