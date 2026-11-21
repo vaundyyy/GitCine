@@ -1,29 +1,119 @@
-header {
-    height: 60px;
-    background-color: var(--color-primary);
-    display: flex;
-    align-items: center;
+.gitcine-header {
+  height: 52px;
+  background-color: var(--apple-surface, rgba(255, 255, 255, 0.82));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--apple-border, rgba(0, 0, 0, 0.08));
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
 }
 
-.dsmovie-nav-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #fff;
+.gitcine-nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.dsmovie-nav-content h1 {
-    font-size: 24px;
-    margin: 0;
-    font-weight: 700;
+.gitcine-brand h1 {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--apple-text, #1d1d1f);
+  margin: 0;
 }
 
-.dsmovie-contact-container {
-    display: flex;
-    align-items: center;
+.gitcine-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.dsmovie-contact-link {
-    margin: 0 0 0 10px;
+.gitcine-nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--apple-text, #1d1d1f);
+  opacity: 0.85;
+  transition: color 0.2s, opacity 0.2s;
+}
+
+.gitcine-nav-link:hover {
+  opacity: 1;
+  color: var(--apple-accent, #0071e3);
+}
+
+.gitcine-admin-badge {
+  color: #bf4800;
+  font-weight: 600;
+}
+
+.gitcine-login-btn,
+.gitcine-profile-btn {
+  background-color: var(--apple-accent, #0071e3);
+  color: #ffffff !important;
+  border-radius: 980px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  transition: background-color 0.2s ease;
+}
+
+.gitcine-login-btn:hover,
+.gitcine-profile-btn:hover {
+  background-color: #0077ed;
+}
+
+.gitcine-logout-btn {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  color: var(--apple-text-secondary, #6e6e73);
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.2s;
+}
+
+.gitcine-logout-btn:hover {
+  color: #d70015;
+}
+
+.gitcine-nav-divider {
+  width: 1px;
+  height: 16px;
+  background-color: var(--apple-border, rgba(0, 0, 0, 0.12));
+}
+
+.gitcine-github-link {
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.gitcine-github-link:hover {
+  opacity: 1;
+}
+
+.gitcine-contact-icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--apple-text, #1d1d1f);
+}
+
+@media (max-width: 576px) {
+  .gitcine-nav-actions {
+    gap: 10px;
+  }
+
+  .gitcine-nav-divider,
+  .gitcine-github-link {
+    display: none;
+  }
+
+  .gitcine-nav-link {
     font-size: 12px;
+  }
 }

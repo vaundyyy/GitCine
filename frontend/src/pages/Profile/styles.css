@@ -1,0 +1,155 @@
+.gitcine-profile-page {
+  padding: 40px 0 64px 0;
+  min-height: calc(100vh - 52px);
+}
+
+.gitcine-profile-header-card {
+  background-color: var(--apple-card-bg, #ffffff);
+  border: 1px solid var(--apple-border, rgba(0, 0, 0, 0.08));
+  border-radius: 20px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: var(--apple-shadow, 0 8px 24px rgba(0, 0, 0, 0.06));
+  margin-bottom: 40px;
+}
+
+.gitcine-profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--apple-accent, #0071e3);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.gitcine-profile-info {
+  flex: 1;
+}
+
+.gitcine-profile-info h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--apple-text, #1d1d1f);
+  margin: 0 0 4px 0;
+}
+
+.gitcine-profile-info p {
+  font-size: 14px;
+  color: var(--apple-text-secondary, #6e6e73);
+  margin: 0;
+}
+
+.gitcine-btn-logout {
+  background-color: rgba(255, 59, 48, 0.1);
+  color: #d70015;
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.gitcine-btn-logout:hover {
+  background-color: rgba(255, 59, 48, 0.18);
+}
+
+.gitcine-evaluations-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--apple-text, #1d1d1f);
+  margin-bottom: 20px;
+}
+
+.gitcine-evaluations-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gitcine-evaluation-card {
+  background-color: var(--apple-card-bg, #ffffff);
+  border: 1px solid var(--apple-border, rgba(0, 0, 0, 0.08));
+  border-radius: 16px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+}
+
+.gitcine-eval-image {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  background-color: #e8e8ed;
+}
+
+.gitcine-eval-content {
+  flex: 1;
+}
+
+.gitcine-eval-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--apple-text, #1d1d1f);
+  margin: 0 0 6px 0;
+}
+
+.gitcine-eval-score-badge {
+  font-size: 13px;
+  color: var(--apple-text-secondary, #6e6e73);
+}
+
+.gitcine-eval-edit-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background-color: rgba(0, 113, 227, 0.1);
+  color: var(--apple-accent, #0071e3);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.gitcine-eval-edit-btn:hover {
+  background-color: rgba(0, 113, 227, 0.18);
+}
+
+.gitcine-explore-link {
+  color: var(--apple-accent, #0071e3);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .gitcine-profile-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+
+  .gitcine-btn-logout {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gitcine-evaluation-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .gitcine-eval-edit-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
